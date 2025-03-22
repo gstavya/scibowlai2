@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sciencebowlai",
+  "private_key_id": "6f8882bdf6bae32cc3adfdd2c886e1301415b9c4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCxKKNpCFL3E+9I\nrdTHoJWjPQGwLG33GD8yNCLnJ76C/QOCpzALPY/hDYkAeb+fAdcLOMimncVqoF+8\nqmrWdznq299u7wcCp9G7h90KPXA1EKAPNrVesBXXaejGj2Elj3eh+XrZtxzmsNML\nHSKGygLtTmcuABfJImvBv9fX5Qf1WmJsgcXr6C0nagEhpB2+ev7PBPnyaidSBqBK\n34TSswl6koaVPkDQsnrLMtORl8o1aI14UolUMe+vHRtf6C8vHsQmp92237bzymup\nZXa/SI1IAjFVNr03DsNPakwwmcuDBvty5avGHC8i6FDLZUhpsHFq3NRo94TE3cRD\nsNLGLVqvAgMBAAECggEAMVyN34Oavk5XI0yQF4lWeFPUxxYyE6G1ZhMh0H+B9TRz\nSHG2EMO39bCURkYmDrNwDCfnvIkESzfhRQvE1foFcLuPz3SZYvOInDR4cdR5kceO\nmX6YXYg5pbpUShMEMfd+EWsWgFglnN+TBis5hg3+b8mjNS2AcyH8nVELXpPpukJb\nbUIAUdrtycu7EnOSwWzHzcuc4+nb888Tr40mNqBCYuyPptUJtJ2VSBVUj7uCSHoW\n7y8j4WSAci/zaipNkVs9MeNGATqC0+fEYfE31xDNHksoRkEYFuGRGC/Cg1vNBH/S\nXotHJ84WUEOKOm71WcL0xKIkoyxtxFXqAaI/ST+0qQKBgQD2dqmThy2BopyozoYP\n8bZN85u4FBkj0TvpaiY8oo9/VHoNb0VSyNhpN24uXZgZIMv6ZfW+M/4X09mjLkHj\nTfAKnsSKOmNIa6WcejOibev32lTkwlPWTBjAMlm2X5mb+CmI/adkBF/yCEpI8A4o\nD+hfc2PMv0mYzvKemM7Kn78X+QKBgQC4A3q1NbnTqr7ESsC5bK+zYSZVWtxW9TNy\nI6W4p34nRmA3UnIwghiqmld18zizfCrNRrISeD7dWXP3y9hc+VVh34fA26m/m1W9\nYHpq4adVCxbSWPQK+AglgaQ6HULwxET5hahpLX3SraWoRfuXFZgd3F/pFtcIxEJw\n0xDX8AzB5wKBgEWl0tX15U40/cBWXFw1Gid9KAwk4dXVUvDrJlMMPTDmVndlclmq\nmD1jhKdlm42+TuY72e4eEzf4jhAnCkeJxsO5iiDlzxiwEuTdQ6orFfu8nzDmGXr9\nliD6GZAIBAinYFVuGNeSxOpInXVvIREBLdGLcjBx/gJIuRdIZ2erLP1BAoGAXPZ9\nBpE26SVorNgrF0I+XXwmFpcJm/DSZcZ2kZwkkojuUOSZBcKj3YSNzOvsaFjBcuVV\nTxlqgP8RJE3aZ9Ya+ZApEBipYECEh2D3V4natI8en3QLDoOR8gjVw/pGeEZfpkOM\n+l3eJBJQD3wTh5eEOwm7dpFwX2BvRHqNFtqSR18CgYBo8dVG8kQbzwjxEMKpOJl/\n05e5JhUUXxn3Hg1dUltcpb3TorMfdj44aMXXxOpZ3ZpLGNc6wZ50aI0O5sFdy0qU\nINjDrnPAuaWqhIvMyROnFbPsmuX8R2hry3xu/Z4GtGf5oZE1zbv3EfFs3rKON7qn\nWUa7chtu+AsRW5GqqmHF9w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@sciencebowlai.iam.gserviceaccount.com",
+  "client_id": "118439088885782652647",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40sciencebowlai.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

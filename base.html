@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Science Bowl AI{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            color: #343a40;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: #0056b3;
+            color: #ffffff;
+            padding: 1rem;
+            transition: 0.3s;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            transition: 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107;
+        }
+
+        .btn-danger {
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            opacity: 0.85;
+        }
+
+        /* Content Box */
+        .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin: 3rem auto;
+            max-width: 1100px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        /* Questions Section */
+        .question-box {
+            font-size: 1.25rem;
+            font-weight: 600;
+            min-height: 60px;
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-success {
+            font-size: 1.1rem;
+            padding: 12px 28px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover,
+        .btn-success:hover {
+            filter: brightness(0.9);
+        }
+
+        /* Timer Styling */
+        .timer {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        /* Flash Messages */
+        .alert {
+            border-radius: 8px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    {% if current_user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('question') }}">Science Bowl AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('question') }}">Questions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('statistics') }}">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-danger text-white px-4"
+                            href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Content Container -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        <div class="mt-4">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="content-box">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

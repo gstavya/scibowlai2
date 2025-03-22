@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Question{% endblock %}
+
+{% block content %}
+<h2>Select a Category and Generate a Question</h2>
+
+<!-- Dropdown to select category -->
+<select id="questionCategory" class="form-select mb-3">
+    <option value="Earth Science">Earth Science</option>
+    <option value="Physics">Physics</option>
+    <option value="Biology">Biology</option>
+    <option value="Chemistry">Chemistry</option>
+</select>
+
+<!-- Button to generate question -->
+<button class="btn btn-primary" onclick="fetchQuestion()">Get Question</button>
+
+<!-- Display question and answer section -->
+<div id="questionSection" class="mt-3">
+    <h3><span id="questionType">Toss-Up</span> Question:</h3>
+    <p id="question"></p>
+    <input type="text" id="answerInput" class="form-control mb-3" placeholder="Your Answer" disabled />
+    <button id="buzzButton" class="btn btn-success" onclick="buzzIn()">Buzz In!</button>
+    <button id="submitAnswer" class="btn btn-primary" onclick="checkAnswer()" disabled>Submit Answer</button>
+    <div id="timer" class="mt-3">Time Left: <span id="timeLeft">5.0</span> seconds</div>
+    <div id="scoreSection" class="mt-3">
+        <h4>Score: <span id="score">0</span> points</h4>
+    </div>
+</div>
+
+<script>
+    let score = 0;
+    let questionData = null;
+    let currentQuestionType = "tossup"; // "tossup" or "bonus"
+    let timerInterval;
+    let timeLeft;
+    let buzzedIn = false;
+    let displayInterval;
+    let isDisplayingQuestion = false; // true while question text is output word-by-word
+    let earlyBuzz = false; // true if buzzed in while question is still being displayed (only applies to tossups)
+
+    function fetchQuestion() {
+        if (isDisplayingQuestion) {
+            console.warn("Please wait until the current question is fully displayed.");
+            return;
+        }
+        const category = document.getElementById("questionCategory").value;
+        fetch(`/generate_question?category=${category}`)
+            .then(response => response.json())
+            .then(data => {
+                questionData = data;
+                currentQuestionType = "tossup";
+                document.getElementById("questionType").innerText = "Toss-Up";
+                displayQuestion(questionData.tossup);
+            })
+            .catch(error => console.error("Error fetching question:", error));
+    }
+
+    function displayQuestion(questionText) {
+        isDisplayingQuestion = true;
+        // Reset inputs and buttons
+        document.getElementById("answerInput").disabled = true;
+        document.getElementById("buzzButton").disabled = false;
+        document.getElementById("submitAnswer").disabled = true;
+        document.getElementById("answerInput").value = "";
+        document.getElementById("question").innerText = "";
+        buzzedIn = false;
+        earlyBuzz = false;
+
+        const words = questionText.split(" ");
+        let i = 0;
+        let displayedText = "";
+
+        displayInterval = setInterval(() => {
+            if (buzzedIn) {
+                clearInterval(displayInterval);
+                isDisplayingQuestion = false;
+                return;
+            }
+            displayedText += words[i] + " ";
+            document.getElementById("question").innerText = displayedText.trim();
+            i++;
+            if (i >= words.length) {
+                clearInterval(displayInterval);
+                isDisplayingQuestion = false;
+                // Start the buzz period timer: 5 sec for tossups, 20 sec for bonuses.
+                setTimerForBuzzPeriod();
+            }
+        }, 400);
+    }
+
+    // Generic timer function. When the timer expires, call onExpire.
+    function startTimer(seconds, onExpire) {
+        clearInterval(timerInterval);
+        timeLeft = seconds;
+        document.getElementById("timeLeft").innerText = timeLeft.toFixed(1);
+        timerInterval = setInterval(() => {
+            timeLeft -= 0.1;
+            document.getElementById("timeLeft").innerText = timeLeft.toFixed(1);
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                onExpire();
+            }
+        }, 100);
+    }
+
+    // Timer for the buzz period (before buzzing in)
+    function setTimerForBuzzPeriod() {
+        if (currentQuestionType === "tossup") {
+            startTimer(5.0, handleTimeout);
+        } else {
+            startTimer(20.0, handleTimeout);
+        }
+    }
+
+    // Timer for the answer period (after buzzing in) – always 5 seconds.
+    function setTimerForAnswer() {
+        startTimer(5.0, handleTimeout);
+    }
+
+    function buzzIn() {
+        if (buzzedIn) return;
+        // For toss-ups, if the question is still being displayed, mark it as an early buzz.
+        if (currentQuestionType === "tossup" && isDisplayingQuestion) {
+            earlyBuzz = true;
+        } else {
+            earlyBuzz = false;
+        }
+        buzzedIn = true;
+        clearInterval(displayInterval); // Stop further word output
+        document.getElementById("answerInput").disabled = false;
+        document.getElementById("buzzButton").disabled = true;
+        document.getElementById("submitAnswer").disabled = false;
+        // When buzzing in, switch to a 5-second answer timer.
+        setTimerForAnswer();
+    }
+
+    // Called when the timer expires (either during buzz period or answer period)
+    function handleTimeout() {
+        clearInterval(timerInterval);
+        if (buzzedIn) {
+            // User had buzzed but ran out of answer time.
+            if (currentQuestionType === "tossup" && earlyBuzz) {
+                score -= 4;
+                alert("Time's up! Incorrect answer. 4 points penalty for early buzz.");
+            } else {
+                alert("Time's up!");
+            }
+            document.getElementById("score").innerText = score;
+        } else {
+            // No buzz occurred within the allowed buzz period.
+            alert("Time's up! No buzz.");
+        }
+        endQuestion();
+    }
+
+    async function updatePoints(increment) {
+        try {
+            const response = await fetch("/update_points", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ increment: increment })
+            });
+            const data = await response.json();
+            console.log(data.message);
+        } catch (error) {
+            console.error("Error updating points:", error);
+        }
+    }
+
+    async function checkAnswer() {
+        clearInterval(timerInterval);
+        const userAnswer = document.getElementById("answerInput").value.trim().toLowerCase();
+        const correctAnswer = currentQuestionType === "tossup"
+            ? questionData.tossup_answer.toLowerCase()
+            : questionData.bonus_answer.toLowerCase();
+        try {
+            const response = await fetch("/check_answer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_answer: userAnswer, correct_answer: correctAnswer })
+            });
+            const data = await response.json();
+            console.log(data);
+            const isCorrect = data.correct;
+            let increment = 0;
+            if (isCorrect) {
+                alert(`Correct! The answer is ${correctAnswer}`);
+                // Award points: 4 for tossups, 10 for bonuses.
+                increment = currentQuestionType === "tossup" ? 4 : 10;
+                score += increment;
+            } else {
+                alert(`Incorrect! The answer is ${correctAnswer}`);
+                // Only for toss-ups do we penalize an early buzz.
+                if (currentQuestionType === "tossup" && earlyBuzz) {
+                    score -= 4;
+                }
+            }
+            document.getElementById("score").innerText = score;
+            await updatePoints(increment);
+            endQuestion();
+        } catch (error) {
+            console.error("Error checking answer:", error);
+        }
+    }
+
+    function loadBonus() {
+        currentQuestionType = "bonus";
+        document.getElementById("questionType").innerText = "Bonus";
+        document.getElementById("question").innerText = "";
+        buzzedIn = false;
+        earlyBuzz = false;
+        // Start displaying bonus question text
+        displayQuestion(questionData.bonus);
+        // Note: Once fully displayed, the buzz timer will be set to 20 seconds.
+    }
+
+    function endQuestion() {
+        clearInterval(timerInterval);
+        // Reset states for next question or bonus.
+        buzzedIn = false;
+        isDisplayingQuestion = false;
+        // If the toss-up round ended, automatically load bonus.
+        if (currentQuestionType === "tossup") {
+            loadBonus();
+        } else {
+            // End of bonus round – alert the user and allow fetching a new question.
+            alert("Bonus round ended. You can now get a new question.");
+        }
+    }
+</script>
+{% endblock %}

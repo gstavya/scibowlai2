@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Your Statistics</h2>
+    <div class="card mt-3">
+        <div class="card-body">
+            <p><strong>Points:</strong> {{ stats.points }}</p>
+            <p><strong>Accuracy:</strong> {{ (stats.questionsCorrect/stats.questionsAnswered)}}</p>
+            <p><strong>Questions Correct:</strong> {{ stats.questionsCorrect }}</p>
+            <p><strong>Questions Answered:</strong> {{ stats.questionsAnswered }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
