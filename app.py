@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 import main3
 from firebase_admin import credentials, firestore
 import requests
+import os
 
 db = firestore.client()
 
