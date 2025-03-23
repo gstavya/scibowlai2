@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from firebase_config import auth
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-import main 
+import main3
 from firebase_admin import credentials, firestore
 import requests
 
